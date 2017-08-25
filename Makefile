@@ -21,10 +21,13 @@ default:
 
 install:
 	@test -d "$(VIRTUAL_ENV)" || mkdir -p "$(VIRTUAL_ENV)"
-	@test -x "$(VIRTUAL_ENV)/bin/python" || virtualenv --quiet "$(VIRTUAL_ENV)"
+	@test -x "$(VIRTUAL_ENV)/bin/python" || virtualenv --python=python3 --quiet "$(VIRTUAL_ENV)"
 	@test -x "$(VIRTUAL_ENV)/bin/pip" || easy_install pip
 	@pip install --quiet --requirement=requirements.txt
 	@pip uninstall --yes pymodbus &>/dev/null || true
+	@pip install --quiet --no-deps --ignore-installed .
+
+update:
 	@pip install --quiet --no-deps --ignore-installed .
 
 reset:
@@ -61,4 +64,4 @@ clean:
 	@find -depth -type d -name __pycache__ -exec rm -Rf {} \;
 	@find -type f -name '*.pyc' -delete
 
-.PHONY: default install reset check test tox docs publish clean
+.PHONY: default install update reset check test tox docs publish clean
